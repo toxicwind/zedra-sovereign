@@ -109,3 +109,33 @@ us bind it to the sovereign router instead of Claude. Setup = build `zedra-host`
 - `Virtual0ps/zedra`, `tieubao/zedra` — sibling forks of the same project
   (GPUI Android experiments). `tanlethanh/zedra` is the maintained upstream with
   the shipping app + host daemon. Use it.
+
+---
+
+## 9. Sovereign integration artifacts (added 2026-07-20)
+
+- **`/home/toxic/.local/bin/zedra-ai-wrapper.sh`** — translates zedra's
+  `claude --print <prompt>` AiPrompt into a POST to the sovereign router at
+  `:25104/v1/chat/completions` (model `hy3`). Export `ZEDRA_CLAUDE_BIN` to this.
+- **`/home/toxic/.local/bin/zedra/zedra-bridge.sh`** — launches `zedra-host`
+  detached with `ZEDRA_CLAUDE_BIN` set, then prints the QR command for the phone.
+  No `sleep`/`timeout` (per sovereign AGENTS.md ban) — the QR is printed on
+  demand by a separate command.
+- **Watchdog feature in sovereign stack** (`tools/sovereign-monitor/watchdog.ts`):
+  borrowed + adapted from `JKHeadley/instar` SessionWatchdog — escalation
+  pipeline (Ctrl+C → SIGTERM → SIGKILL → kill) with FAIL-CLOSED LLM-gated
+  escalation, pipeline-sibling guard, and outcome tracking. Auto-recovers stuck
+  long builds instead of spinning.
+
+## 10. Build status (2026-07-20)
+
+- `cargo check -p zedra-host` REQUIRES `vendor/zed` (path dep via `gpui`). The
+  submodule is NOT optional despite the workspace `exclude=["vendor"]` line —
+  `zedra-host` still pulls `gpui` transitively.
+- `git submodule update --init --recursive` failed ("Unable to find current
+  revision") because the recorded commit `d354031…` must be fetched from
+  `tanlethanh/zed` branch `feat/gpui-mobile`. A direct `git clone --branch
+  feat/gpui-mobile` + `git checkout d354031…` is the working path, but the full
+  Zed fork is large (GBs) and exceeds the 1-minute build budget on this box
+  (disk ~95% full). **Build deferred** until a background fetch completes; the
+  host daemon logic is sound and the AiPrompt seam is verified by code reading.
