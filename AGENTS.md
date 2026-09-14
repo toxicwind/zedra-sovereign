@@ -1,7 +1,7 @@
 # AGENTS.md — Zedra Sovereign (`/home/toxic/projects/zedra-sovereign`)
 
 **Role**: Zedra / sovereign editor integration workspace.
-**Stack**: Rust, GPUI, TypeScript.
+**Stack**: JavaScript (Node.js lenses), shell scripts.
 
 ---
 
@@ -14,7 +14,7 @@
 
 1. **Verify live, then claim.** No "done" without `curl` / `lsof` / `nvidia-smi` / `npx tsgo --noEmit`.
 2. **Fail loud.** Never `2>/dev/null`, never `|| true`. Errors are diagnostic.
-3. **No commit without explicit user request.** Fork stays private under `toxicwind`.
+3. **No commit without explicit user request.** Repo is public under `toxicwind`; never commit secrets.
 4. **Multi-strategy.** Non-trivial work → 3+ approaches, benchmark, keep runner-up.
 5. **TDD/BDD.** Failing assertion first, then fix. `npx tsgo --noEmit` for type-check.
 6. **Use emergence tools first.** GHAS (`:25113`) → ast-grep (`ast-grep` binary) → Tombi for TOML.
